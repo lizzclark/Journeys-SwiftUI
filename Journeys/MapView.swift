@@ -13,6 +13,7 @@ import SwiftUI
 
 struct MapView: View {
     @EnvironmentObject var locations: Locations
+    @ScaledMetric var annotationSize: CGFloat = 80
     
     @State private var region: MKCoordinateRegion = MKCoordinateRegion(center: .init(latitude: 51.507222, longitude: -0.1275), span: .init(latitudeDelta: 40, longitudeDelta: 40))
         
@@ -23,11 +24,11 @@ struct MapView: View {
                     Image(location.country)
                         .renderingMode(.original)
                         .resizable()
-                        .frame(width: 80, height: 40)
                         .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
                         .overlay(
                             RoundedRectangle(cornerRadius: 10, style: .continuous).stroke(Color.blue, lineWidth: 4)
                         )
+                        .frame(width: max(80, annotationSize), height: max(40, annotationSize / 2))
                 }
             }
         }
