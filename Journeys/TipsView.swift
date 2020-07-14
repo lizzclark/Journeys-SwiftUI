@@ -17,15 +17,25 @@ struct Tip: Decodable, Identifiable {
     let body: String
 }
 
+struct ListItem: Identifiable {
+    let id: UUID
+    let title: String
+    let children: [ListItem]?
+}
+
 struct TipsView: View {
     let tips = Bundle.main.decode([Tip].self, from: "tips.json")
+    
+    var listItems: [ListItem] {
+        return tips.map { tip in
+            return ListItem(id: tip.id, title: tip.title, children: [ListItem(id: UUID(), title: tip.body, children: nil)])
+        }
+    }
 
     var body: some View {
-        List(tips) { tip in
+        List(listItems, children: \.children) { item in
             VStack(alignment: .leading) {
-                Text(tip.title)
-                    .font(.headline)
-                Text(tip.body)
+                Text(item.title)
             }
             .padding(.vertical)
         }
