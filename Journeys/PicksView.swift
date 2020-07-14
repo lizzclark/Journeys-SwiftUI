@@ -10,7 +10,7 @@ import SwiftUI
 struct PicksView: View {
     @EnvironmentObject var locations: Locations
     
-    let layout: [GridItem] = Array.init(repeating: GridItem(.flexible()), count: 3)
+    let layout: [GridItem] = Array.init(repeating: GridItem(.adaptive(minimum: 150)), count: 3)
     
     var body: some View {
         /* Here is a section we added */
@@ -36,6 +36,7 @@ struct PicksView: View {
                         NavigationLink(destination: DiscoverView(location: location), label: {
                             Image(location.heroPicture)
                                 .resizable()
+                                .aspectRatio(contentMode: .fill)
                                 .frame(height: 125)
                                 .mask(RoundedRectangle(cornerRadius: 8, style: .continuous))
                                 .overlay(
