@@ -17,30 +17,22 @@ struct SidebarNavigationView: View {
                 NavigationLink(
                     destination: DiscoverView(location: locations.primary),
                     label: {
-                        Image(systemName: "airplane.circle.fill")
-                            .imageScale(.large)
-                        Text("Discover")
+                        Label("Discover", systemImage: "airplane.circle.fill")
                     })
                 NavigationLink(
                     destination: PicksView(),
                     label: {
-                        Image(systemName: "star.fill")
-                            .imageScale(.large)
-                        Text("Picks")
+                        Label("Picks", systemImage: "star.fill")
                     })
                 NavigationLink(
                     destination: MapView(),
                     label: {
-                        Image(systemName: "map.fill")
-                            .imageScale(.large)
-                        Text("Map")
+                        Label("Map", systemImage: "map.fill")
                     })
                 NavigationLink(
                     destination: TipsView(),
                     label: {
-                        Image(systemName: "list.bullet")
-                            .imageScale(.large)
-                        Text("Tips")
+                        Label("Tips", systemImage: "list.bullet")
                     })
             }
             .navigationTitle("Journeys")

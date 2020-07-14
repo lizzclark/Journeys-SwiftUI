@@ -36,7 +36,7 @@ struct TipsView: View {
     var body: some View {
         List(listItems, children: \.children) { item in
             if item.children != nil {
-                Text(item.title)
+                Label(item.title, systemImage: "quote.bubble")
                     .font(.headline)
             } else {
                 Text(item.title)
