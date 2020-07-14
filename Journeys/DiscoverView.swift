@@ -15,6 +15,8 @@ struct DiscoverView: View {
     
     @State private var region: MKCoordinateRegion
     @State private var disclosureExpanded: Bool = false
+    @State private var selectedPicture: String?
+    @Namespace var animation
     
     init(location: Location) {
         self.location = location
@@ -70,13 +72,24 @@ struct DiscoverView: View {
                         ScrollView(.horizontal, showsIndicators: false) {
                             LazyHStack {
                                 ForEach(location.pictures, id: \.self) { picture in
-                                    Image(picture)
-                                        .resizable()
-                                        .aspectRatio(contentMode: .fit)
-                                        .frame(height: 150)
-                                        .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+                                    if selectedPicture == picture {
+                                        Color.clear.frame(width: 150)
+                                    } else {
+                                        Image("\(picture)-thumb")
+                                            .resizable()
+                                            .frame(width: 150)
+                                            .clipShape(RoundedRectangle(cornerRadius: 10))
+                                            .onTapGesture {
+                                                withAnimation(.interactiveSpring(response: 0.5, dampingFraction: 0.9)) {
+                                                    selectedPicture = picture
+                                                }
+                                            }
+                                            .matchedGeometryEffect(id: picture, in: animation)
+                                    }
                                 }
-                            }.padding([.horizontal, .bottom], 20)
+                            }
+                            .frame(height: 100)
+                            .padding([.horizontal, .bottom], 20)
                         }
                         
                         /* ends */
@@ -132,10 +145,52 @@ struct DiscoverView: View {
                     )
                 }
             }
+            if let picture = selectedPicture {
+                OverlayImageView(animation: animation, picture: picture, height: geo.size.height, deselect: {
+                    selectedPicture = nil
+                })
+            }
         }
         .background(Color("Background"))
         .edgesIgnoringSafeArea(.top)
         .navigationBarTitleDisplayMode(.inline)
+    }
+}
+
+struct OverlayImageView: View {
+    let animation: Namespace.ID
+    let picture: String
+    let height: CGFloat
+    let deselect: () -> Void
+    
+    var body: some View {
+        ScrollView {
+            ZStack {
+                Rectangle()
+                    .background(Color.black)
+                    .opacity(0.3)
+                VStack {
+                    Image(picture)
+                        .resizable()
+                        .frame(width: 300, height: 150)
+                        .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+                        .padding()
+                        .matchedGeometryEffect(id: picture, in: animation)
+                    Text("This is some text This is some text This is some text This is some text This is some text This is some text This is some text This is some text This is some text This is some text This is some text This is some text This is some text This is some text This is some text This is some text This is some text ")
+                        .background(Color.white)
+                        .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+                        .padding()
+                    Spacer()
+                }
+                .onTapGesture {
+                    withAnimation {
+                        deselect()
+                    }
+                }
+            }
+            .zIndex(10)
+            .frame(height: height)
+        }
     }
 }
 
