@@ -17,6 +17,7 @@ struct Tip: Decodable, Identifiable {
     let body: String
 }
 
+/* This struct was added to make the tips list expandable */
 struct ListItem: Identifiable {
     let id: UUID
     let title: String
@@ -34,10 +35,12 @@ struct TipsView: View {
 
     var body: some View {
         List(listItems, children: \.children) { item in
-            VStack(alignment: .leading) {
+            if item.children != nil {
+                Text(item.title)
+                    .font(.headline)
+            } else {
                 Text(item.title)
             }
-            .padding(.vertical)
         }
         .navigationTitle("Tips")
     }
